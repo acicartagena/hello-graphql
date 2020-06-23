@@ -5,7 +5,6 @@ const PostAPI = require('./datasources/posts');
 const store = createStore();
 
 const pubsub = new PubSub();
-
 const POST_ADDED = 'POST_ADDED';
 
 const posts = require('./data');
@@ -42,17 +41,11 @@ const resolvers = {
     },
 
     Mutation: {
-
         addPost: async (_, userPost, { dataSources }) => {
             const post = await dataSources.postAPI.createPost({ text: userPost.text, author: userPost.author });
-            // if (post) return new Buffer(email).toString('base64');
+            pubsub.publish(POST_ADDED, { postAdded: post });
             return post
           },
-
-        // addPost(root, args, context) {
-        //     pubsub.publish(POST_ADDED, { postAdded: args });
-        //     return { args }
-        // }
     },
 
     Subscription: {
@@ -67,7 +60,17 @@ const server = new ApolloServer({
     resolvers,
     dataSources: () => ({
         postAPI: new PostAPI({ store })
-      })
+      }),
+    context: async ({ req, connection }) => {
+        if (connection) {
+          // check connection for metadata
+          return connection.context;
+        } else {
+          // check from req
+          const token = req.headers.authorization || "";
+          return { authorized: true };
+        }
+    },
 });
 
 
