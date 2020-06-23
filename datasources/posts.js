@@ -20,6 +20,11 @@ class PostAPI extends DataSource {
     const posts = await this.store.posts.create({ text: textArg, author: authorArg });
     return posts && posts[0] ? posts[0] : null;
   }
+
+  async allPosts() {
+    const posts = await this.store.posts.findAll();
+    return posts
+  }
 }
 
 module.exports = PostAPI;

@@ -33,7 +33,9 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        posts: () => posts,
+        posts: async (_, args, { dataSources}) => {
+            return dataSources.postAPI.allPosts();
+        },
         post(parent, args, context, info) {
             return posts.find(post => post.author === args.author)
         }
@@ -44,6 +46,7 @@ const resolvers = {
         addPost: async (_, userPost, { dataSources }) => {
             const post = await dataSources.postAPI.createPost({ text: userPost.text, author: userPost.author });
             // if (post) return new Buffer(email).toString('base64');
+            return post
           },
 
         // addPost(root, args, context) {
