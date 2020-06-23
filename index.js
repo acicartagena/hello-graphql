@@ -19,7 +19,7 @@ const typeDefs = gql`
 
     type Query {
         posts: [Post]
-        post(author: String!): Post
+        postsBy(author: String!): [Post]
     }
 
     type Mutation {
@@ -36,8 +36,8 @@ const resolvers = {
         posts: async (_, args, { dataSources}) => {
             return dataSources.postAPI.allPosts();
         },
-        post(parent, args, context, info) {
-            return posts.find(post => post.author === args.author)
+        postsBy: async (parent, args, { dataSources }, info) => {
+            return dataSources.postAPI.postsBy({ author: args.author })
         }
     },
 
