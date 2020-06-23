@@ -13,15 +13,8 @@ const server = new ApolloServer({
     dataSources: () => ({
         postAPI: new PostAPI({ store })
       }),
-    context: async ({ req, connection }) => {
-        if (connection) {
-          // check connection for metadata
-          return connection.context;
-        } else {
-          // check from req
-          const token = req.headers.authorization || "";
-          return { authorized: true };
-        }
+    context: async () => {
+        return { authorized: true };
     },
 });
 

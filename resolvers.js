@@ -8,7 +8,7 @@ const resolvers = {
             let allPosts = await dataSources.postAPI.allPosts();
             return allPosts
         },
-        postsBy: async (parent, args, { dataSources }, info) => {
+        postsBy: async (parent, args, { dataSources }) => {
             let postByAuthor =  await dataSources.postAPI.postsBy({ author: args.author })
             return postByAuthor
         }
