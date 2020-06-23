@@ -25,6 +25,11 @@ class PostAPI extends DataSource {
     const posts = await this.store.posts.findAll();
     return posts
   }
+
+  async postsBy({ author: authorName} = {}) {
+    const posts = await this.store.posts.findAll({ where: { author: authorName }});
+    return posts
+  }
 }
 
 module.exports = PostAPI;
